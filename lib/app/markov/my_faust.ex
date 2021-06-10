@@ -57,7 +57,7 @@ defmodule App.Markov.MyFaust do
     edge
   end
 
-  defp do_traverse(chain, n, method, focus \\ nil) do
+  defp do_traverse(chain, n, method, focus) do
     start_seq = if focus !== nil do [focus] else chain |> Map.keys |> Enum.random end
     do_traverse(chain, n, method, start_seq, Enum.join(start_seq, " "))
   end

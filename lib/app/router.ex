@@ -248,7 +248,7 @@ defmodule App.Router do
     end)
   end
 
-  def handle_message(function, update)
+  def handle_message(function, _update)
       when is_function(function) do
     Task.start(fn ->
       function.()
