@@ -35,4 +35,6 @@ defmodule App do
     opts = [strategy: :one_for_one, name: App.Supervisor]
     Supervisor.start_link(children, opts)
   end
+
+  def get_bot_name, do: Application.get_env(:app, :bot_name)
 end

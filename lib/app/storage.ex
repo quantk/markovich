@@ -25,8 +25,8 @@ defmodule App.Storage do
     GenServer.cast(__MODULE__, {:put, key, value})
   end
 
-  def get(key) do
-    GenServer.call(__MODULE__, {:get, key})
+  def get(key, default \\ nil) do
+    GenServer.call(__MODULE__, {:get, key}) || default
   end
 
   def inc(key) do

@@ -49,13 +49,13 @@ defmodule App.Poller do
   end
 
   defp process_messages({:error, %Nadia.Model.Error{reason: reason}}) do
-    Logger.log(:error, reason)
+    Logger.log(:error, inspect reason)
 
     -1
   end
 
   defp process_messages({:error, error}) do
-    Logger.log(:error, error)
+    Logger.log(:error, inspect error)
 
     -1
   end

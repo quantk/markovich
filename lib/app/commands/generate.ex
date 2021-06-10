@@ -2,9 +2,9 @@ defmodule App.Commands.Generate do
   use App.Commander
 
   def handle(update) do
-    Logger.debug("generate command")
-    dir_path = App.Utils.get_dir_path(get_chat_id())
+    Logger.debug("generate command for #{get_chat_id()}")
 
+    dir_path = App.Utils.get_dir_path(get_chat_id())
     model_path = App.Utils.get_model_path(get_chat_id())
     history_path = App.Utils.get_history_path(get_chat_id())
 

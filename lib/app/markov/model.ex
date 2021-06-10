@@ -1,8 +1,6 @@
 defmodule App.Markov.Model do
-  use Memoize
-
   def generate_model(history_path, model_path) do
-    {:ok, content} = File.read(history_path)
+    content = File.read!(history_path)
 
     text =
       content
@@ -12,7 +10,7 @@ defmodule App.Markov.Model do
       |> Enum.take(3000)
       |> Enum.join("\n")
 
-    chain = Markovify.Text.model(text)
+    chain = Markovify.Text.model(text, &split_into_sentences/1, 1)
     {:ok, file} = File.open(model_path, [:write])
     IO.binwrite(file, :erlang.term_to_binary(chain))
     File.close(file)
@@ -22,10 +20,12 @@ defmodule App.Markov.Model do
     File.close(file)
   end
 
-  defmemop load_model(model_path), expires_in: 60 * 1000 * 60 * 5 do
+  defp load_model(model_path) do
     {:ok, chain} = File.read(model_path)
     :erlang.binary_to_term(chain)
   end
+
+  defp split_into_sentences(text), do: text |> String.split(~r/\s*\n\s*/u)
 
   def generate_sentence(model_path) do
     chain = load_model(model_path)
