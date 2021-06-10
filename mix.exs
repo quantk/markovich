@@ -13,7 +13,7 @@ defmodule App.Mixfile do
   end
 
   def application do
-    [applications: [:logger, :nadia, :jason, :faust, :cubdb, :memoize, :poison],
+    [applications: [:logger, :nadia, :jason, :faust, :cubdb, :memoize, :poison, :markovify],
      mod: {App, []}]
   end
 
@@ -25,6 +25,7 @@ defmodule App.Mixfile do
       {:jason, "~> 1.2"},
       {:cubdb, "~> 1.0.0-rc.10"},
       {:memoize, "~> 1.3"},
+      {:markovify, "~> 0.3.0"},
     ]
   end
 

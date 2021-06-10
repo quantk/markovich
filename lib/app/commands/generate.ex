@@ -1,5 +1,6 @@
 defmodule App.Commands.Generate do
   use App.Commander
+
   def handle(update) do
     Logger.debug("generate command")
     dir_path = App.Utils.get_dir_path(get_chat_id())
@@ -15,15 +16,11 @@ defmodule App.Commands.Generate do
       App.Markov.Model.generate_model(history_path, model_path)
     end
 
-    case App.Markov.Model.generate_sentence(model_path, nil) do
+    case App.Markov.Model.generate_sentence(model_path) do
       {:ok, message} ->
-        if message !== update.message.text do
-          message
-          |> String.trim(",")
-          |> send_message(reply_to_message_id: update.message.message_id)
-        end
-      {:error, _} ->
-        nil
+        message
+        |> String.trim(",")
+        |> send_message(reply_to_message_id: update.message.message_id)
     end
   end
 end

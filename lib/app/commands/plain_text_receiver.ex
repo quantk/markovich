@@ -1,15 +1,29 @@
 defmodule App.Commands.PlainTextReceiver do
   use App.Commander
   @message_limit 20
+  @learn_model_limit 100
 
   def handle(update) do
-    current_message_limit = App.Storage.inc(get_chat_id())
+    current_message_limit = App.Storage.inc({:message_limit, get_chat_id()})
     Logger.debug("Current message limit: #{current_message_limit}")
 
     if current_message_limit >= @message_limit do
+      App.Storage.reset({:message_limit, get_chat_id()})
       do_handle(update)
     else
       nil
+    end
+
+    current_model_limit = App.Storage.inc({:model_limit, get_chat_id()})
+    Logger.debug("Current message limit: #{current_model_limit}")
+    if current_model_limit >= @learn_model_limit do
+      history_path = App.Utils.get_history_path(get_chat_id())
+      model_path = App.Utils.get_model_path(get_chat_id())
+
+      Logger.debug("Regenerate model for #{history_path}")
+      App.Markov.Model.generate_model(history_path, model_path)
+      Logger.debug("Regenerate model for #{history_path} is done")
+      App.Storage.reset({:model_limit, get_chat_id()})
     end
   end
 
@@ -34,52 +48,11 @@ defmodule App.Commands.PlainTextReceiver do
           end
         end
 
-        case File.stat(history_path) do
-          {:ok, %{size: size}} ->
-            if size < 500_000 do
-              Logger.debug("Regenerate model for #{history_path} #{size}")
-              App.Markov.Model.generate_model(history_path, model_path)
-              Logger.debug("Regenerate model for #{history_path} is done")
-            end
-        end
-
-        message_text =
-          update.message.text
-          |> String.downcase()
-
-        message_text =
-          cond do
-            String.starts_with?(message_text, "почему") ->
-              "потому что"
-
-            String.starts_with?(message_text, "зачем") ->
-              "чтобы"
-
-            true ->
-              message_text =
-                message_text
-                |> String.split()
-                |> Enum.filter(fn word -> String.length(word) >= 5 end)
-
-              if Enum.empty?(message_text) do
-                nil
-              else
-                Enum.random(message_text)
-              end
-          end
-
-        case App.Markov.Model.generate_sentence(model_path, message_text) do
+        case App.Markov.Model.generate_sentence(model_path) do
           {:ok, message} ->
-            if message !== message_text do
-              message
-              |> String.trim(",")
-              |> send_message(reply_to_message_id: update.message.message_id)
-
-              App.Storage.reset(get_chat_id())
-            end
-
-          {:error, _} ->
-            nil
+            message
+            |> String.trim(",")
+            |> send_message(reply_to_message_id: update.message.message_id)
         end
     end
   end
