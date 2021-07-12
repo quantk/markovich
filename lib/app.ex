@@ -18,14 +18,14 @@ defmodule App do
     import Supervisor.Spec, warn: false
 
     children = [
-      %{
-        id: App.Poller,
-        start: {App.Poller, :start_link, []}
-      },
-      %{
-        id: App.Matcher,
-        start: {App.Matcher, :start_link, []}
-      },
+      # %{
+      #   id: App.Poller,
+      #   start: {App.Poller, :start_link, []}
+      # },
+      # %{
+      #   id: App.Matcher,
+      #   start: {App.Matcher, :start_link, []}
+      # },
       %{
         id: App.Storage,
         start: {App.Storage, :start_link, []}

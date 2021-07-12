@@ -6,5 +6,6 @@ defmodule App.Commands do
   command "updatemodel", App.Commands.UpdateModel, :handle
   command "generate", App.Commands.Generate, :handle
   command "resetdata", App.Commands.ResetData, :handle
+  command "setspamlvl", App.Commands.SetSpamLevel, :handle
   message App.Commands.PlainTextReceiver, :handle
 end

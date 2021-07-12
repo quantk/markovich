@@ -1,7 +1,7 @@
 defmodule App.Commands.PlainTextReceiver do
   use App.Commander
   @default_spam_level 3
-  @learn_model_limit 100
+  @learn_model_limit 30
 
   def handle(update) do
     update

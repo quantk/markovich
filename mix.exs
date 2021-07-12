@@ -19,8 +19,9 @@ defmodule App.Mixfile do
 
   defp deps do
     [
-      {:nadia, "~> 0.6.0"},
-      {:poison, "~> 3.1"},
+      {:nadia, "~> 0.7.0"},
+      {:poison, "~> 4.0"},
+      {:httpoison, "~> 1.7"},
       {:jason, "~> 1.2"},
       {:cubdb, "~> 1.0.0-rc.10"},
       {:memoize, "~> 1.3"},

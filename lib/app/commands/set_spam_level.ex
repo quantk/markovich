@@ -1,9 +1,6 @@
 defmodule App.Commands.SetSpamLevel do
   use App.Commander
-  @spec handle(%{
-          :message => atom | %{:text => binary, optional(any) => any},
-          optional(any) => any
-        }) :: {:ok}
+
   def handle(update) do
     [_command | args] = String.split(update.message.text, " ")
     do_handle(args, get_chat_id(), update)
